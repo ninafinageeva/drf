@@ -18,6 +18,6 @@ class CourseSerializer(ModelSerializer):
         model = Course
         fields = '__all__'
 
-        def get_lesson_count(self, instance):
-            """Возвращает количество уроков в курсе"""
-            return instance.lesson_set.count()
+    def get_lesson_count(self, instance):
+        """Возвращает количество уроков в курсе"""
+        return instance.lesson_set.count()
