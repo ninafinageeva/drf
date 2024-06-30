@@ -1,0 +1,14 @@
+[
+  {
+    "model": "users.payment",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "date_of_payment": "2024-06-23T05:44:08.217Z",
+      "paid_course": null,
+      "paid_lesson": null,
+      "payment_amount": 1,
+      "payment_method": "Non-cash"
+    }
+  }
+]

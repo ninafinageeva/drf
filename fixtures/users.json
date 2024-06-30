@@ -1,0 +1,54 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$xd4qNjUWAOX5PPvMBGJ6YS$A23ySCpzNH7TWJyUIAAB/FOQfo0GJSAowFhHUe3OIpM=",
+      "last_login": "2024-06-23T05:43:37.427Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-06-23T04:15:52.487Z",
+      "email": "admin@123.qwe",
+      "phone": null,
+      "city": null,
+      "avatar": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$0mLRUfMaozGtb7jycM2Cjf$xVIMsAVuaeCKcOd6+K8qNz2lNNDL1z51oBhELsazH/k=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-06-29T14:59:53.768Z",
+      "email": "test@test.test",
+      "phone": null,
+      "city": null,
+      "avatar": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "date_of_payment": "2024-06-23T05:44:08.217Z",
+      "paid_course": null,
+      "paid_lesson": null,
+      "payment_amount": 1,
+      "payment_method": "Non-cash"
+    }
+  }
+]
