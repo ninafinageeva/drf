@@ -7,14 +7,14 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView,
 from materials.permissions import IsModerator, IsOwner
 
 from materials.models import Course, Lesson, Subscription
-from materials.paginators import CoursePaginator, LessonPaginator
+from materials.paginators import CustomPaginator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    pagination_class = CoursePaginator
+    pagination_class = CustomPaginator
 
     def perform_create(self, serializer):
         """Привязывает курс к пользователю при создании"""
@@ -47,7 +47,7 @@ class LessonCreateAPIView(CreateAPIView):
 class LessonListAPIView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    pagination_class = LessonPaginator
+    pagination_class = CustomPaginator
 
 
 class LessonRetrieveAPIView(RetrieveAPIView):
