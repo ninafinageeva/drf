@@ -17,6 +17,13 @@ django-filter==24.2
 djangorestframework-simplejwt==5.3.1
 pyjwt==2.8.0
 coverage==7.5.4
+drf-yasg==1.21.7
+inflection==-0.5.1
+pytz==2024.1
+pyyaml==6.0.1
+uritemplate==4.1.1
+stripe==10.4.0
+
 
 
 

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "rest_framework_simplejwt",
+    "drf_yasg",
 
     "users",
     "materials",
@@ -63,7 +64,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny', ],
 }
 
 DATABASES = {
@@ -100,6 +101,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+DOMAIN_NAME = 'http://localhost:8000'
+
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = (BASE_DIR / "static",)
@@ -116,6 +119,10 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=45),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+SWAGGER_SETTINGS = {"DEFAULT_AUTO_SCHEMA_CLASS":"materials.views.Decorate_Viewset_Methods"}
+
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 
 
 
