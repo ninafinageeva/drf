@@ -120,8 +120,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-SWAGGER_SETTINGS = {"DEFAULT_AUTO_SCHEMA_CLASS":"materials.views.Decorate_Viewset_Methods"}
-
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 
 
