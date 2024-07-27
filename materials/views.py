@@ -10,6 +10,7 @@ from materials.permissions import IsModerator, IsOwner
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CustomPaginator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from materials.tasks import send_updates
 
 
 class CourseViewSet(ModelViewSet):
@@ -23,6 +24,12 @@ class CourseViewSet(ModelViewSet):
         instance.owner = self.request.user
         instance.save()
 
+    def perform_update(self, serializer):
+        """ Запускает send_updates при редактировании курса. """
+        instance = serializer.save()
+        send_updates.delay(instance.pk)
+        instance.save()
+        
     def get_permissions(self):
         """Настройка прав для ViewSet"""
         if self.action in ['update', 'partial_update', 'list', 'retrieve']:
