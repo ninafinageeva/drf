@@ -130,7 +130,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_SCHEDULE = {
     'check_last_login': {
-        'task': 'materials.tasks.check_last_login',
+        'task': 'users.tasks.check_last_login',
         'schedule': timedelta(days=1),
     }
 }
@@ -148,5 +148,8 @@ EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", False) == "True"
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+SIMPLE_JWT = {
+    'UPDATE_LAST_LOGIN': True,
+}
 
 
