@@ -1,18 +1,18 @@
 from celery import shared_task
-from django.utils import timezone
+from datetime import datetime
 
 from users.models import User
 
 
 @shared_task
-def check_last_login():
+def check_user_activity():
     """
-    Проверяет дату последнего входа пользователя и
-    блокирует пользователя в случае отсутсвия более 1 месяца
+    Проверяем активность пользователя, если больше 30 дней, деактивируем
     """
-    tmp_date = timezone.now() - timezone.timedelta(days=30)
-    users = User.objects.filter(is_active=True).exclude(is_superuser=True).filter(last_login__lt=tmp_date)
+    users = User.objects.all()
+    date_now = datetime.date.today()
+    deactivate_time = datetime.timedelta(month=1)
     for user in users:
-        user.is_active = False
-        user.save()
-
+        if date_now - user.last_login > deactivate_time:
+            user.is_active = False
+            user.save()

@@ -26,24 +26,12 @@ class CourseViewSet(ModelViewSet):
         instance.owner = self.request.user
         instance.save()
 
-    def perform_update(self, request, pk, *args, **kwargs):
+    def perform_update(self, serializer):
         """ Запускает send_updates при редактировании курса. """
-        # instance = serializer.save()
-        # send_updates.delay(instance.pk)
-        # instance.save()
-        course = Course.objects.get(pk=pk)
-        tmp_date = timezone.now() - timezone.timedelta(hours=4)
-        if not course.updated_at or course.updated_at < tmp_date:
-            subscriptions = Subscription.objects.filter(course=pk)
-            users_list = [subscription.user.id for subscription in subscriptions]
-            email_list = []
-            for user in users_list:
-                email_list.append(User.objects.get(id=user).email)
-            send_updates.delay(email_list, course.title)
-            print("Отправлены письма об обновлении курса")
-        else:
-            print("Курс недавно обновлялся")
-        return super().update(request, *args, **kwargs)
+        serializer.save()
+        course = serializer.save()
+        course_id = course.id
+        send_updates.delay(course_id)
 
     def get_permissions(self):
         """Настройка прав для ViewSet"""
