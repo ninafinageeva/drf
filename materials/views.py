@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +8,6 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView,
 
 from materials.permissions import IsModerator, IsOwner
 
-from config.settings import TIME_ZONE
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CustomPaginator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
@@ -33,12 +32,17 @@ class CourseViewSet(ModelViewSet):
         # send_updates.delay(instance.pk)
         # instance.save()
         course = Course.objects.get(pk=pk)
-        subscriptions = Subscription.objects.filter(course=pk)
-        users_list = [subscription.user.id for subscription in subscriptions]
-        email_list = []
-        for user in users_list:
-            email_list.append(User.objects.get(id=user).email)
-        send_updates.delay(email_list, course.title)
+        tmp_date = timezone.now() - timezone.timedelta(hours=4)
+        if not course.updated_at or course.updated_at < tmp_date:
+            subscriptions = Subscription.objects.filter(course=pk)
+            users_list = [subscription.user.id for subscription in subscriptions]
+            email_list = []
+            for user in users_list:
+                email_list.append(User.objects.get(id=user).email)
+            send_updates.delay(email_list, course.title)
+            print("Отправлены письма об обновлении курса")
+        else:
+            print("Курс недавно обновлялся")
         return super().update(request, *args, **kwargs)
 
     def get_permissions(self):
