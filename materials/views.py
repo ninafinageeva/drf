@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -7,10 +8,12 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView,
 
 from materials.permissions import IsModerator, IsOwner
 
+from config.settings import TIME_ZONE
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CustomPaginator
 from materials.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 from materials.tasks import send_updates
+from users.models import User
 
 
 class CourseViewSet(ModelViewSet):
@@ -24,12 +27,20 @@ class CourseViewSet(ModelViewSet):
         instance.owner = self.request.user
         instance.save()
 
-    def perform_update(self, serializer):
+    def perform_update(self, request, pk, *args, **kwargs):
         """ Запускает send_updates при редактировании курса. """
-        instance = serializer.save()
-        send_updates.delay(instance.pk)
-        instance.save()
-        
+        # instance = serializer.save()
+        # send_updates.delay(instance.pk)
+        # instance.save()
+        course = Course.objects.get(pk=pk)
+        subscriptions = Subscription.objects.filter(course=pk)
+        users_list = [subscription.user.id for subscription in subscriptions]
+        email_list = []
+        for user in users_list:
+            email_list.append(User.objects.get(id=user).email)
+        send_updates.delay(email_list, course.title)
+        return super().update(request, *args, **kwargs)
+
     def get_permissions(self):
         """Настройка прав для ViewSet"""
         if self.action in ['update', 'partial_update', 'list', 'retrieve']:
