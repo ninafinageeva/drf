@@ -81,17 +81,18 @@ class LessonDestroyAPIView(DestroyAPIView):
 class SubscriptionCreateAPIView(generics.CreateAPIView):
     serializer_class = SubscriptionSerializer
     queryset = Subscription.objects.all()
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """ Переопределение метода для создания и удаления подписки в зависимости от её статуса. """
         user = self.request.user
         course_id = self.request.data.get('course')
-        course_item = get_object_or_404(Course, pk=course_id)
+        course = get_object_or_404(Course, pk=course_id)
         # создание и удаление подписки
-        subscription, created = Subscription.objects.get_or_create(user=user, course=course_item, is_subscribed=True)
-        if not created:
-            subscription.delete()
-            message = 'подписка удалена'
+        if Subscription.objects.filter(user=user, course=course).exists():
+            Subscription.objects.filter(user=user, course=course).delete()
+            message = f"Подписка для пользователя {user} на курс {course} удалена"
         else:
-            message = 'подписка добавлена'
+            Subscription.objects.create(user=user, course=course)
+            message = f"Подписка для пользователя {user} на курс {course} создана"
         return Response({"message": message})
